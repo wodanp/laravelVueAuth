@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ThemeSwitch from '@/components/ThemeSwitch.vue';
 import { useElForm } from '@/composables/elForm';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -14,11 +15,11 @@ const auth = useAuthStore()
 const handleLogin = ()=>{
     auth.login(formModel)
 }
-
 </script>
 
 <template>
     <h1>Login</h1>
+    <ThemeSwitch/>
     <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="0px">
         <el-form-item prop="email">
             <el-input v-model="formModel.email" placeholder="email"/>

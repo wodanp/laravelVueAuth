@@ -18,5 +18,4 @@ import Sidebar from './components/Sidebar.vue';
             </el-main>
         </el-container>
     </el-container>
-
 </template>
