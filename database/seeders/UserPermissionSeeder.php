@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -43,5 +44,14 @@ class UserPermissionSeeder extends Seeder
         ])->assignRole('writer');            
 
         $writer->givePermissionTo('edit articles');
+
+        foreach (range(1,20) as $index) {
+            User::create([
+                'name' => Str::random(10),
+                'email' => Str::random(10).'@test.local',
+                'email_verified_at' => now(),
+                'password' => bcrypt('password'),
+            ]);
+        }
     }
 }

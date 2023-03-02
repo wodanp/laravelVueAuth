@@ -18,4 +18,6 @@ Route::namespace('\App\Http\Controllers\Api')
     ->middleware(['auth:sanctum', 'verified'])
     ->group(function () {
         Route::get('/me', MeController::class);
+
+        Route::apiResource('users', UserController::class);
     });

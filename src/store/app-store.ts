@@ -3,10 +3,11 @@ import { defineStore } from "pinia";
 export const useAppStore = defineStore("app", {
     state: () => ({
         isDarkMode: null,
+        sidebar: {
+            isCollapsed: false
+        }
     }),
-    persist: {
-        enabled: true,
-    },
+    persist: true,
     actions: {
         updateDarkMode(){
             if(this.isDarkMode === null){
@@ -20,6 +21,9 @@ export const useAppStore = defineStore("app", {
                 document.documentElement.classList.add('light')
                 document.documentElement.classList.remove('dark')
               }
+        },
+        toggleSideBar(){
+            this.sidebar.isCollapsed = !this.sidebar.isCollapsed
         }
     }
 })

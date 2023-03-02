@@ -8,10 +8,17 @@ import type { Component, Slots } from 'vue'
 const router = useRouter()
 const route = useRoute()
 
+const props = defineProps<{
+    routesList: RouteRecordRaw[]
+}>()
 
-const routesList = computed(() => {
-  return router.options.routes
-})
+
+
+// TODO überlegen ob es nicht besser ist nur die backend dinger ? oder als parameter?
+// eventuell wegen dynamischen routen wieder ändern ?
+// const routesList = computed(() => {
+//   return router.options.routes
+// })
 
 function getOnlyChildPath(parentRoute: RouteRecordRaw): RouteRecordRaw {
     const childRoute = parentRoute.children?.find((route: RouteRecordRaw) => !route.meta?.hidden)
@@ -25,11 +32,16 @@ const NavLink = (props: { route: RouteRecordRaw, url: string }, { slots }: { slo
     return <router-link to={props.url}>{slots.default?.()}</router-link>
 }
 
+//TODO default nur für icon für level 0?
 const getNavIcon = (item: RouteMeta | undefined) => {
-    if (!item || (item && !item.icon)) return null
-    return (
-        <SvgIcon svg="tabler-user-circle" class="mr-2" />
-    )
+    console.log(item)
+    // if (!item || (item && !item.icon)) return null
+    if (!item || (item && !item.icon))
+        return <SvgIcon svg="tabler-point-filled" class="mr-2" />
+    else
+        return <SvgIcon svg={item.icon as string} class="mr-2" />
+    
+    
 }
 
 const SidebarItem = (props: { route: RouteRecordRaw, basePath: string }) => {
@@ -48,7 +60,7 @@ const SidebarItem = (props: { route: RouteRecordRaw, basePath: string }) => {
         const basePath = resolve(props.basePath, route.path)
         return (
             <el-sub-menu index={basePath} v-slots={slots}>
-                subMenu: {route.children?.map(item => <SidebarItem route={item} basePath={basePath}></SidebarItem>)}
+                {route.children?.map(item => <SidebarItem route={item} basePath={basePath}></SidebarItem>)}
             </el-sub-menu>
         )
     }
@@ -100,4 +112,6 @@ const isCollapse = computed(() => false)
 <style lang="sass">
 .el-menu-item span:first-letter
     text-transform: uppercase
+.el-scrollbar
+    background-color: #2d2e45    
 </style>
