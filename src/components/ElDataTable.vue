@@ -99,8 +99,8 @@ const closeDialog = ()=>{
         <slot />
         <el-table-column width="155" align="center">
             <template #default="scope">
-                <el-button @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-                <el-button @click="handleDelete(scope.$index, scope.row)">Del</el-button>
+                <el-button @click="handleEdit(scope.$index, scope.row)" circle><SvgIcon svg="tabler-edit" /></el-button>
+                <el-button @click="handleDelete(scope.$index, scope.row)" circle><SvgIcon svg="tabler-trash" /></el-button>
             </template>
         </el-table-column>
     </el-table>
