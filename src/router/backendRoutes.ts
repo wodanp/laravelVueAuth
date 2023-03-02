@@ -30,7 +30,7 @@ export const backendRoutes: RouteRecordRaw[] = [
                 path: "crud",
                 name: "Curd",
                 component: () =>
-                    import("@/views/dashboard/Dashboard.vue"),
+                    import("@/views/tests/Crud.vue"),
             },
             {
                 path: "leve2",
