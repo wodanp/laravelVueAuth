@@ -9,7 +9,7 @@ const props = defineProps({
     showDialogFooter: {type: Boolean, default: false},
 })
 
-const crudApi = useCrud('users')
+const crudApi = useCrud(props.endpoint)
 
 const query = reactive({
     pageIndex: 1,
