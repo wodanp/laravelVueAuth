@@ -13,6 +13,10 @@ import UserForm from './components/UserForm.vue';
         <el-table-column prop="name" label="name" />
         <el-table-column prop="email" label="email" />
 
+        <template #filter>
+            Filter
+        </template>
+
         <template #dialog="{ idx, closeDialog }">
             <UserForm :id="idx" @close="closeDialog" />
         </template>

@@ -2,11 +2,13 @@
 import { useCrud } from '@/composables/crud';
 import { reactive, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import SvgIcon from './SvgIcon.vue';
 
 const props = defineProps({
     endpoint: { type: String },
-    hideAddButton: {type: Boolean, default: false},
-    showDialogFooter: {type: Boolean, default: false},
+    hideAddButton: { type: Boolean, default: false },
+    showDialogFooter: { type: Boolean, default: false },
+    showFullScreen: { type: Boolean, default: true }
 })
 
 const crudApi = useCrud(props.endpoint)
@@ -45,8 +47,8 @@ const idx = ref(-1)             //TODO überlegen ob ich das brauche wenn id in 
 const idxData = ref(null)   // oder hier nur idx und laden und daten im form?
 const showDialog = ref(false)
 const handleAdd = () => {
-	idx.value = -1
-	showDialog.value = true
+    idx.value = -1
+    showDialog.value = true
 }
 const handleEdit = async (index: number, row: any) => {
     if (row.id > 0 && row.id !== idx.value) {
@@ -87,30 +89,48 @@ const handleDelete = (index: number, row: any) => {
         })
 }
 
-const closeDialog = ()=>{
+const closeDialog = () => {
     udateTableData()
     showDialog.value = false
 }
+
+const isFullscreen = ref(false)
+const toggleFull = () => {
+  isFullscreen.value = !isFullscreen.value
+}
+
 </script>
 
 <template>
+
     <el-button @click="handleAdd" v-if="!hideAddButton">Add</el-button>
     <el-table :data="tableData">
         <slot />
         <el-table-column width="155" align="center">
             <template #default="scope">
-                <el-button @click="handleEdit(scope.$index, scope.row)" circle><SvgIcon svg="tabler-edit" /></el-button>
-                <el-button @click="handleDelete(scope.$index, scope.row)" circle><SvgIcon svg="tabler-trash" /></el-button>
+                <el-button @click="handleEdit(scope.$index, scope.row)" circle>
+                    <SvgIcon svg="tabler-edit" :size="18"/>
+                </el-button>
+                <el-button @click="handleDelete(scope.$index, scope.row)" circle>
+                    <SvgIcon svg="tabler-trash" :size="18" />
+                </el-button>
             </template>
         </el-table-column>
     </el-table>
-
-    <el-pagination  class="mt-10"
-        background layout="total, sizes, prev, pager, next" v-model:current-page="query.pageIndex"
+    
+    <el-pagination class="mt-10" background layout="total, sizes, prev, pager, next" v-model:current-page="query.pageIndex"
         :total="tableMeta.total" :page-size="query.pageSize" :page-sizes="[2, 20, 200]" @size-change="handlePageSizeChange"
         @current-change="handlePageIndexChange" />
 
-    <el-dialog v-model="showDialog">
+    <el-dialog v-model="showDialog" :fullscreen="isFullscreen" class="el-data-table">
+        <template #header>
+            <div class="flex justify-between">
+                <span v-if="idx>0">Edit</span><span v-else>New</span>
+                <el-link :underline="false" @click="toggleFull" class="mr-4" v-if="showFullScreen">
+                    <SvgIcon :svg="isFullscreen?'tabler-minimize':'tabler-maximize'" :size="16"/>
+                </el-link>
+            </div>
+        </template>
         <slot name="dialog" :idx="idx" :data="idxData" :closeDialog="closeDialog"></slot>
 
         <template #footer v-if="showDialogFooter">
@@ -122,4 +142,12 @@ const closeDialog = ()=>{
 </template>
 
 <style lang="sass">
+.el-data-table
+    .el-dialog__header
+        font-size: 1.1rem
+    .el-dialog__headerbtn
+        width: 2.75rem
+        height: 2.75rem
+        right: 0.5rem
+        top: .625rem
 </style>
