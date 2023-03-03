@@ -16,9 +16,9 @@ export const useApi = (endpoint:string = 'api') => {
         baseURL,
         timeout: 1000,
         headers: {
-            // 'Content-Type': 'application/json',
-            // 'X-Requested-With': 'XMLHttpRequest',            
-            // 'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
             //'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         withCredentials: true,

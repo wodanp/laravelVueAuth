@@ -21,3 +21,7 @@ export const meApi = () => {
 export const logoutApi = () => {
     return web.post("/logout");
 }
+
+export const sanctumCrsf = ()=>{
+    return web.get('/sanctum/csrf-cookie')
+}

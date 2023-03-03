@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import router from './router'
 import App from "./App.vue"
+import {sanctumCrsf} from '@/api/auth-api'
 
 import '@/sass/element/index.scss';
 import 'element-plus/es/components/message/style/css'
@@ -14,7 +15,9 @@ import 'virtual:svg-icons-register'
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
-createApp(App)
-    .use(pinia)
-    .use(router)
-    .mount("#app");
+sanctumCrsf().then(()=>{
+    createApp(App)
+        .use(pinia)
+        .use(router)
+        .mount("#app");
+})
