@@ -16,6 +16,7 @@ const crudApi = useCrud(props.endpoint)
 const query = reactive({
     pageIndex: 1,
     pageSize: 2,
+    search: null
 })
 
 //in in elTable composable verschieben?
@@ -99,11 +100,22 @@ const toggleFull = () => {
   isFullscreen.value = !isFullscreen.value
 }
 
+const handleSearch = ()=>{
+    query.pageIndex = 1
+    udateTableData()
+}
+
 </script>
 
 <template>
-
-    <el-button @click="handleAdd" v-if="!hideAddButton">Add</el-button>
+    <div class="bg-green-900 flex gap-4 mb-4">
+        <el-input v-model="query.search" clearable></el-input>
+        <el-button @click="handleSearch"><SvgIcon svg="tabler-search" :size="16"/> Search</el-button>
+        <el-button @click="handleAdd" v-if="!hideAddButton">Add</el-button>
+    </div>
+    
+    <slot name="filter"></slot>
+    
     <el-table :data="tableData">
         <slot />
         <el-table-column width="155" align="center">

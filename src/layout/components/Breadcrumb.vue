@@ -10,7 +10,7 @@ watch(
     () => route.path,
     () => {
         breadCrumbItems.value = route.matched.filter((item) => item.meta.breadcrumb !== false && !item.meta.hidden)
-        console.log(breadCrumbItems.value)
+        console.log('breadCrumbItems', breadCrumbItems.value)
         if (breadCrumbItems.value.length === 0) return
         //TODO dashboard als home icon? was wenn ich mehr dashbaords habe, 
     },

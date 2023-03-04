@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/store/auth-store'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { ElMessage } from 'element-plus'
 
@@ -50,6 +51,10 @@ export const useApi = (endpoint:string = 'api') => {
                 type: 'error',
                 showClose: true,
             });
+            if(error.code === 'ERR_BAD_REQUEST'){
+                // const auth = useAuthStore()         //TODO überlegen ob das 
+                // auth.logout()
+            }
             return Promise.reject(error)
         }
     );

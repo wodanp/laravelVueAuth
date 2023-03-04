@@ -34,7 +34,7 @@ const NavLink = (props: { route: RouteRecordRaw, url: string }, { slots }: { slo
 
 //TODO default nur für icon für level 0?
 const getNavIcon = (item: RouteMeta | undefined) => {
-    console.log(item)
+    console.log('getNavIcon', item)
     // if (!item || (item && !item.icon)) return null
     if (!item || (item && !item.icon))
         return <SvgIcon svg="tabler-point-filled" class="mr-2" />

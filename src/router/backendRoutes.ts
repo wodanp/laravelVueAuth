@@ -1,4 +1,4 @@
-import { type RouteRecordRaw } from "vue-router"
+import { type RouteRecordRaw } from "vue-router";
 
 export const backendRoutes: RouteRecordRaw[] = [
     {
@@ -16,8 +16,7 @@ export const backendRoutes: RouteRecordRaw[] = [
                 path: "user",
                 name: "User",
                 meta: { title: "User", icon: "tabler-user" },
-                component: () =>
-                    import("@/views/admin/User.vue"),
+                component: () => import("@/views/admin/User.vue"),
             },
         ],
     },
@@ -27,17 +26,33 @@ export const backendRoutes: RouteRecordRaw[] = [
         meta: { title: "Tests", icon: "tabler-question-mark" },
         children: [
             {
-                path: "crud",
-                name: "Curd",
-                component: () =>
-                    import("@/views/tests/Crud.vue"),
+                path: "table",
+                name: "table",
+                children: [
+                    {
+                        path: "component",
+                        name: "component",
+                        component: () =>
+                            import("@/views/tests/table/TableComponent.vue"),
+                    },
+                    {
+                        path: "composables",
+                        name: "Composables",
+                        component: () =>
+                            import("@/views/tests/table/TableComposables.vue"),
+                    },
+                ],
             },
             {
-                path: "leve2",
-                name: "leve2",
-                component: () =>
-                    import("@/views/dashboard/Dashboard.vue"),
+                path: "crud",
+                name: "Curd",
+                component: () => import("@/views/tests/Crud.vue"),
+            },
+            {
+                path: "inputs",
+                name: "Inputs",
+                component: () => import("@/views/tests/Inputs.vue"),
             },
         ],
     },
-]
+];
