@@ -15,10 +15,40 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        //TODO get params validieren?
+        // if($search = $request->input('search')){
+        //     $query = User::search(request($search));
+        // }else{
+        //     $query = User::query();
+        // }
+
+        //https://stackoverflow.com/questions/8519793/php-explode-but-ignore-escaped-delimiter
+        //preg_split('~(?<!\\\)' . preg_quote($delimeter, '~') . '~', $text);
+        // /(.*?[^\\](\\\\)*?);/
+
+        //TODO request('search')   vs  $request->input('search') ??
         $query = User::query();
+        $query->when(request('search'), function($q){
+            $q->where('name', 'LIKE', '%'.request('search').'%')
+                ->orWhere('email', 'LIKE', '%'.request('search').'%');
+        });
+        // if($search = $request->input('search')){
+        //     $query->where('name', 'LIKE', "%$search%")
+        //         ->orWhere('email', 'LIKE', "%$search%");
+        // };
+        if($order = $request->input('order')){
+            $query->orderBy($order['prop'], $order['order']);
+        };
+
         $users = $query->paginate(
             $perPage = $request->input('pageSize', 10), $columns = ['*'], $pageName = 'pageIndex'
         );
+
+        //laravel:scout propblem, pagingund relationen
+        // $users = User::search(request('search'))->paginate(
+        //     $perPage = (int)$request->input('pageSize', 10), $columns = ['*'], (int)$pageName = 'pageIndex'
+        // );
+
         return UserResource::collection($users);
     }
 

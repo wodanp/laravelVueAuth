@@ -53,6 +53,11 @@ export const backendRoutes: RouteRecordRaw[] = [
                 name: "Inputs",
                 component: () => import("@/views/tests/Inputs.vue"),
             },
+            {
+                path: "icons",
+                name: "Icons",
+                component: () => import("@/views/tests/Icons.vue"),
+            },            
         ],
     },
 ];

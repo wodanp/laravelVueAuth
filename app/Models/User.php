@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -43,4 +44,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function toSearchableArray(): array
+    {
+        // $array = $this->toArray(); 
+        // return $array;
+
+        return $this->only('name', 'email');
+
+        // return [
+        //     'name' => $this->name,
+        //     'email' => $this->email,
+        // ];
+    }
 }

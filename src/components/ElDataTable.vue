@@ -3,10 +3,11 @@ import { useCrud } from '@/composables/crud';
 import { reactive, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import SvgIcon from './SvgIcon.vue';
+import { debounce } from 'lodash-es';
 
 const props = defineProps({
     endpoint: { type: String },
-    hideAddButton: { type: Boolean, default: false },
+    hideAddButton: { type: Boolean, default: true },
     showDialogFooter: { type: Boolean, default: false },
     showFullScreen: { type: Boolean, default: true }
 })
@@ -16,7 +17,9 @@ const crudApi = useCrud(props.endpoint)
 const query = reactive({
     pageIndex: 1,
     pageSize: 2,
-    search: null
+    search: null,
+    order: null,
+    filter: {},
 })
 
 //in in elTable composable verschieben?
@@ -101,30 +104,61 @@ const toggleFull = () => {
 }
 
 const handleSearch = ()=>{
-    query.pageIndex = 1
     udateTableData()
 }
+
+const showFilterPanel = ref(false)
+const toggleFilterPanel = ()=>{
+    console.log('toggleFilterPanel')
+    showFilterPanel.value = !showFilterPanel.value
+}
+
+const handleSortChange = ({ prop, order })=>{
+    query.order = (order)? {prop, order: (order === 'descending')?'desc':'asc'}: null    
+}
+
+const handleClearSerach = ()=>{
+    query.filter = {}
+    udateTableData()
+}
+
+watch(
+    () => query,
+    debounce((query) => {
+        udateTableData()
+    },500),
+    { deep: true }
+)
 
 </script>
 
 <template>
-    <div class="bg-green-900 flex gap-4 mb-4">
-        <el-input v-model="query.search" clearable></el-input>
-        <el-button @click="handleSearch"><SvgIcon svg="tabler-search" :size="16"/> Search</el-button>
+    <el-space mb-2 class="search">
+        <el-input v-model="query.search" clearable @clear="handleClearSerach">
+            <template #prepend>
+                <i-ep-filter @click="toggleFilterPanel"/>
+            </template>
+            <template #append>
+                <i-ep-search @click="handleSearch"/>
+            </template>
+        </el-input>
         <el-button @click="handleAdd" v-if="!hideAddButton">Add</el-button>
+    </el-space>
+    <div v-if="showFilterPanel" class="py-2 my-2">
+        <slot name="filter" :filter="query.filter"></slot>
     </div>
-    
-    <slot name="filter"></slot>
-    
-    <el-table :data="tableData">
+
+    <el-table :data="tableData" @sort-change="handleSortChange"  class="mt-5">
         <slot />
         <el-table-column width="155" align="center">
             <template #default="scope">
                 <el-button @click="handleEdit(scope.$index, scope.row)" circle>
-                    <SvgIcon svg="tabler-edit" :size="18"/>
+                    <!-- <SvgIcon svg="tabler-edit" :size="18"/> -->
+                    <i-ep-edit />
                 </el-button>
                 <el-button @click="handleDelete(scope.$index, scope.row)" circle>
-                    <SvgIcon svg="tabler-trash" :size="18" />
+                    <!-- <SvgIcon svg="tabler-trash" :size="18" /> -->
+                    <i-ep-delete />
                 </el-button>
             </template>
         </el-table-column>
@@ -151,6 +185,10 @@ const handleSearch = ()=>{
             </span>
         </template>
     </el-dialog>
+
+    <div class="bg-slate-800 p-5 rounded-2xl mt-10">
+        {{ query }}
+    </div>
 </template>
 
 <style lang="sass">
@@ -162,4 +200,12 @@ const handleSearch = ()=>{
         height: 2.75rem
         right: 0.5rem
         top: .625rem
+
+.search
+    .el-input-group__prepend
+        cursor: pointer
+    .el-input-group__append
+        cursor: pointer
+        background-color: var(--el-color-primary)
+        color: var(--el--color-text-primary)
 </style>
